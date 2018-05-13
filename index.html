@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Getting Started</title>
+    <link href="./vendor/c3-0.5.4/c3.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js" charset="utf-8"></script>
+    <script src="./vendor/c3-0.5.4/c3.min.js"></script>
+  </head>
+  <body>
+    <style>
+      #chart{
+        width: 50%;
+      }
+      #chart2{
+        width: 50%;
+      }
+
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function(event) {
+        var cost_input = document.getElementById("cost-input");
+        var cost_output = document.getElementById("cost-output");
+        var capacity_input = document.getElementById("capacity-input");
+        var capacity_output = document.getElementById("capacity-output");
+        var price_input = document.getElementById("price-input");
+        var price_output = document.getElementById("price-output");
+
+        function random(){
+          return parseInt(Math.random(10) * 10);
+        }
+        function update(cost, capacity, price){
+          average_prices = [];
+          average_profits = [];
+          profit_losss = [];
+          dutch_prices = [];
+          dutch_profits = [];
+          axis = [];
+          length = 10;
+          delta = capacity / length;
+          for(i = 0; i<length; i=i+1){
+            average_prices.push(price);
+            if(i == 0){
+              dutch_prices.unshift(price);
+            }else{
+              new_price = dutch_prices[0] + 10;
+              dutch_prices.unshift(new_price);
+            }
+          }
+          for(i = 0; i<length; i=i+1){
+            dutch_profits[i] = (dutch_prices[i] * (i*delta)) - cost;
+            average_profits[i] = (average_prices[i] * (i*delta)) - cost;
+            profit_losss[i] = 0;
+            axis[i] = i * delta;
+          }
+          var dutch_break_even_price, dutch_break_even_point;
+          for(i = 0; i<length; i=i+1){
+            if(dutch_profits[i] > 0 && !dutch_break_even_price){
+              dutch_break_even_price = dutch_prices[i];
+              dutch_break_even_point = i;
+              // break;
+            }
+            console.log(dutch_profits[i], i);
+          }
+          for(i = 0; i<dutch_break_even_point; i=i+1){
+              dutch_prices[i] = dutch_break_even_price;
+          }
+          console.log(dutch_break_even_price, dutch_break_even_point);
+
+          average_prices.unshift('average price');
+          average_profits.unshift('average profits');
+          dutch_prices.unshift('dutch price');
+          dutch_profits.unshift('dutch profits');
+          profit_losss.unshift('profit loss');
+          axis.unshift('x');
+          var chart = c3.generate({
+              bindto: '#chart',
+              transition: {
+                duration: 0
+              },
+              data: {
+                x: 'x',
+                columns: [
+                  axis,
+                  average_prices,
+                  dutch_prices,
+                ]
+              }
+          });
+          var chart = c3.generate({
+              bindto: '#chart2',
+              transition: {
+                duration: 0
+              },
+              data: {
+                x: 'x',
+                columns: [
+                  axis,
+                  average_profits,
+                  dutch_profits,
+                  profit_losss
+                ]
+              }
+          });
+        };
+        var cost = 3000;
+        var capacity = 100;
+        var price = 50;
+        update(cost, capacity, price); 
+        cost_input.oninput = function() {
+          cost = parseInt(this.value);
+          update(cost, capacity, price);
+          cost_output.innerHTML = this.value;
+        }
+        capacity_input.oninput = function() {
+          capacity = parseInt(this.value);
+          update(cost, capacity, price);
+          capacity_output.innerHTML = this.value;
+        }
+        price_input.oninput = function() {
+          price = parseInt(this.value);
+          update(cost, capacity, price);
+          price_output.innerHTML = this.value;
+        }
+      })
+    </script>
+    <h3>Price curve</h3>
+    <div id='chart'></div>
+    <h3>Profit curve</h3>
+    <div id='chart2'></div>
+    <ul>
+      <li>
+        Fixed cost: $<span id="cost-output">3000</span>
+        <input type="range" min="0" max="10000" step="100" value="3000" class="slider" id="cost-input">
+      </li>
+      <li>
+        Capacity: <span id="capacity-output">100</span>
+        <input type="range" min="10" max="1000" step="10" value="100" class="slider" id="capacity-input">
+      </li>
+      <li>
+        Price: $<span id="price-output">50</span>
+        <input type="range" min="10" max="100" step="10" value="50" class="slider" id="price-input">
+      </li>
+    </ul>
+  </body>
+</html>
