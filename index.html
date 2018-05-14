@@ -11,7 +11,6 @@
       .slidecontainer {
           width: 100%;
       }
-
       .slider {
           -webkit-appearance: none;
           width: 100%;
@@ -54,7 +53,7 @@
         padding-left: 0;
       }
       li{
-        padding:5px;
+        padding:10px;
       }
       .side{
         padding: 5px;
@@ -186,18 +185,21 @@
       </div>
       <ul>
         <li>
-          When your fixed cost is $<span id="cost-output">3000</span>
-          <br/>
-          <input type="range" min="0" max="10000" step="100" value="3000" class="slider" id="cost-input">
+          <p>
+            When your fixed cost is $<span id="cost-output">3000</span>
+          </p>
+           <input type="range" min="0" max="10000" step="100" value="3000" class="slider" id="cost-input">
         </li>
         <li>
-          with capacity of <span id="capacity-output">100</span> people
-          <br/>
+          <p>
+            with capacity of <span id="capacity-output">100</span> people
+          </p>
           <input type="range" min="10" max="1000" step="10" value="100" class="slider" id="capacity-input">
         </li>
         <li>
-          If you charge $<span id="price-output">50</span>
-          <br />
+          <p>
+            If you charge $<span id="price-output">50</span>
+          </p>
           <input type="range" min="10" max="100" step="10" value="50" class="slider" id="price-input">
         </li>
       </ul>
