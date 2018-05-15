@@ -8,6 +8,14 @@
   </head>
   <body>
     <style>
+      hr{
+        border: 2;
+        border-bottom: 0px;
+        background: white;
+      }
+      .warn{
+          color:red;
+      }
       .slidecontainer {
           width: 100%;
       }
@@ -53,7 +61,8 @@
         padding-left: 0;
       }
       li{
-        padding:10px;
+        padding-right:5px;
+        /* padding:5px; */
       }
       .side{
         padding: 5px;
@@ -73,6 +82,7 @@
       document.addEventListener("DOMContentLoaded", function(event) {
         var cost_input = document.getElementById("cost-input");
         var cost_output = document.getElementById("cost-output");
+        var result_output = document.getElementById("result");
         var capacity_input = document.getElementById("capacity-input");
         var capacity_output = document.getElementById("capacity-output");
         var price_input = document.getElementById("price-input");
@@ -112,18 +122,18 @@
               dutch_break_even_point = i;
               // break;
             }
-            console.log(dutch_profits[i], i);
+            // console.log(dutch_profits[i], i, axis[i]);
           }
           for(i = 0; i<dutch_break_even_point; i=i+1){
               dutch_prices[i] = dutch_break_even_price;
           }
-          console.log(dutch_break_even_price, dutch_break_even_point);
+          // console.log(dutch_break_even_price, dutch_break_even_point);
 
-          average_prices.unshift('average price');
-          average_profits.unshift('average profits');
-          dutch_prices.unshift('dutch price');
-          dutch_profits.unshift('dutch profits');
-          profit_losss.unshift('profit loss');
+          average_prices.unshift('average');
+          average_profits.unshift('average');
+          dutch_prices.unshift('dutch');
+          dutch_profits.unshift('dutch');
+          profit_losss.unshift('break even');
           axis.unshift('x');
           var chart = c3.generate({
               bindto: '#chart',
@@ -154,33 +164,44 @@
                 ]
               }
           });
+          if(dutch_profits[length] > 0){
+            return `You need to sell at least <b>${axis[dutch_break_even_point]}</b> tickets to go break even with max profit of <b>$${dutch_profits[length]}</b>`
+          }else{
+            return "<span class='warn'>Ticket price too low</span>"
+          }
         };
         var cost = 3000;
         var capacity = 100;
         var price = 50;
-        update(cost, capacity, price); 
+        var result = update(cost, capacity, price);
+        result_output.innerHTML = result;
         cost_input.oninput = function() {
           cost = parseInt(this.value);
-          update(cost, capacity, price);
+          result = update(cost, capacity, price);
+          result_output.innerHTML = result;
+
           cost_output.innerHTML = this.value;
         }
         capacity_input.oninput = function() {
           capacity = parseInt(this.value);
-          update(cost, capacity, price);
+          result = update(cost, capacity, price);
+          result_output.innerHTML = result;
           capacity_output.innerHTML = this.value;
         }
         price_input.oninput = function() {
           price = parseInt(this.value);
-          update(cost, capacity, price);
+          result = update(cost, capacity, price);
+          result_output.innerHTML = result;
           price_output.innerHTML = this.value;
         }
       })
     </script>
     <div class="side">
-      <h2>Dutch auction simulator</h2>
-      <div>
+      <h2>Price & profit simulator</h2>
+      <div id="result">
         Using the slider below, you can experiment various scenarios to set your profit expectation
       </div>
+      <hr/>
       <ul>
         <li>
           <p>
